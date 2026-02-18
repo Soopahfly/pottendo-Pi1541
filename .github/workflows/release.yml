@@ -1,0 +1,83 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-legacy:
+    name: Build Legacy Kernel Images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install ARM cross-compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-arm-none-eabi binutils-arm-none-eabi make
+
+      - name: Build legacy targets
+        run: |
+          mkdir -p release-artifacts
+          for RASPPI in 0 2 3 1BPlus 1BRev1 1BRev2; do
+            echo "Building for RASPPI=${RASPPI}..."
+            make RASPPI=${RASPPI} legacy -j$(nproc)
+            cp kernel.img release-artifacts/kernel-Pi${RASPPI}.img
+            make RASPPI=${RASPPI} clean
+          done
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+
+      - name: Create release archive
+        run: |
+          cd release-artifacts
+          # Copy supporting files
+          cp ../options.txt ../config.txt ../README.md .
+          cat > README-kernels.txt << 'EOF'
+          pottendo-Pi1541 Kernel Images
+          ==============================
+          Place the appropriate kernel file on your Pi's SD card boot partition:
+
+            kernel-Pi0.img      -> Raspberry Pi Zero, Pi Zero W
+            kernel-Pi1BPlus.img -> Raspberry Pi 1 Model B+ (40-pin GPIO)
+            kernel-Pi1BRev1.img -> Raspberry Pi 1 Model B Revision 1 (26-pin GPIO)
+            kernel-Pi1BRev2.img -> Raspberry Pi 1 Model B Revision 2 (26-pin GPIO)
+            kernel-Pi2.img      -> Raspberry Pi 2
+            kernel-Pi3.img      -> Raspberry Pi 3, 3B+, 3A+, Zero 2 W
+
+          See README.md and options.txt for configuration details.
+          Verify config.txt has the correct kernel filename for your Pi model.
+          EOF
+          zip -r ../pottendo-Pi1541-${{ steps.version.outputs.VERSION }}-legacy.zip .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: pottendo-Pi1541 ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## pottendo-Pi1541 ${{ steps.version.outputs.VERSION }}
+
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md) for full details.
+
+            ### Legacy Kernel Images (Pi 0 / 1 / 2 / 3)
+
+            Download `pottendo-Pi1541-${{ steps.version.outputs.VERSION }}-legacy.zip` and place the correct `kernel-PiX.img` file on your SD card boot partition:
+
+            | File | Pi Model |
+            |------|----------|
+            | `kernel-Pi0.img` | Pi Zero, Pi Zero W |
+            | `kernel-Pi1BPlus.img` | Pi 1 Model B+ (40-pin) |
+            | `kernel-Pi1BRev1.img` | Pi 1 Model B Rev 1 (26-pin) |
+            | `kernel-Pi1BRev2.img` | Pi 1 Model B Rev 2 (26-pin) |
+            | `kernel-Pi2.img` | Pi 2 |
+            | `kernel-Pi3.img` | Pi 3, 3B+, 3A+, Zero 2 W |
+
+            > **Note**: Pi 4 and Pi 5 Circle-based builds require the full `build.sh` workflow with `circle-stdlib`. See the README for instructions.
+          files: pottendo-Pi1541-${{ steps.version.outputs.VERSION }}-legacy.zip
+          draft: false
+          prerelease: false
