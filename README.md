@@ -50,8 +50,48 @@ Some discussions, announcements one can find in the Forum64 thread, [here](https
 
 # Installation
 
-For your convencience a fully populated Pi1541 is prepared for easy setup. 
+## Pre-built Releases
+
+Pre-built kernel images for legacy Pi models (Pi Zero, Pi 1, Pi 2, Pi 3) are automatically
+compiled and published to the [Releases page](https://github.com/Soopahfly/pottendo-Pi1541/releases)
+by GitHub Actions whenever a new version tag is pushed.
+
+### Downloading a release
+
+1. Go to the [Releases page](https://github.com/Soopahfly/pottendo-Pi1541/releases)
+2. Download the `pottendo-Pi1541-vX.Y.Z-legacy.zip` asset
+3. Extract and copy the correct kernel image for your Pi to the SD card boot partition:
+
+| Pi Model | Kernel file |
+|---|---|
+| Pi Zero / Zero W | `kernel-Pi0.img` |
+| Pi 1 Model B+ (40-pin) | `kernel-Pi1BPlus.img` |
+| Pi 1 Model B Rev 1 (26-pin) | `kernel-Pi1BRev1.img` |
+| Pi 1 Model B Rev 2 (26-pin) | `kernel-Pi1BRev2.img` |
+| Pi 2 | `kernel-Pi2.img` |
+| Pi 3 / 3B+ / 3A+ / Zero 2W | `kernel-Pi3.img` |
+
+Only the kernel image needs replacing on an existing install — `options.txt`, `config.txt`, ROMs and all other files remain unchanged.
+
+### Triggering a new release build (maintainers)
+
+The build runs automatically when a version tag is pushed. To publish a new release:
+
+```sh
+git tag v2.1.1
+git push origin v2.1.1
+```
+
+GitHub Actions will build all legacy kernel images and attach them as a zip to a new GitHub Release. You can monitor the build at the [Actions tab](https://github.com/Soopahfly/pottendo-Pi1541/actions).
+
+> **Note**: Circle-based builds (Pi 3/4/5 with WebUI) are not included in the automated build
+> as they require the `circle-stdlib` dependency to be cloned and patched. See the
+> [Build](#checkout--build) section below for instructions on building those locally.
+
+For your convenience a fully populated Pi1541 is prepared for easy setup.
 Copy the content of the release bundle to your boot partition of your Pi1541 SDCard. Make sure you adapt `options.txt` to your Pi1541 hardware setup (_Option A_ or _Option B_). Option B hardware is default. If you want to use networking (Wifi or Ethernet), see below how to activate.
+
+
 
 # Status
 ------
