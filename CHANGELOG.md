@@ -2,7 +2,7 @@
 
 All notable changes to pottendo-Pi1541 are documented here.
 
-## [1.26] - 2026-02-18
+## [2.1.1] - 2026-02-18
 
 ### Added
 - **Power supply warning**: The Pi now detects insufficient power supply conditions
@@ -22,20 +22,23 @@ All notable changes to pottendo-Pi1541 are documented here.
 - `rpi-mailbox-interface.c`: Added `TAG_GET_THROTTLED` case handler in
   `RPI_PropertyAddTag()`.
 - `main.cpp`: Added `GetThrottled()`, `CheckPowerSupply()`, throttle bit defines,
-  and two call sites (startup + runtime loop).
+  patch version field (`versionPatch`), and two call sites (startup + runtime loop).
+  Version display strings updated to show `V2.1.1` format.
 
 ---
 
-## [1.25] - Prior release
+## [2.1] - Prior release (pottendo fork base)
 
-- Merged upstream Pi1541 v1.19–v1.25 changes.
-- Circle port improvements (pottendo, 2024).
-- WebUI enhancements: USB drive support, file management, image creation/upload.
+- Circle-stdlib port (Step 50.1) for Pi 3/4/5.
+- WebUI: USB drive support, file management, image creation/upload/download/delete.
 - Pico2 and ESP32 platform support.
 - NTP time support, TZ option.
+- Improved rotary support (hgryska).
+- IEC command partition parse fix (RetroNynjah).
+- Show DeviceID in stats.
 - Various stability and compatibility fixes.
 
-## [1.24] and earlier
+## [1.25] and earlier
 
 See upstream [Pi1541](https://github.com/pi1541/Pi1541) release notes and the
 git log for full history of changes prior to the pottendo fork.

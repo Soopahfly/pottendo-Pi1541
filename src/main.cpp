@@ -74,8 +74,9 @@ extern "C" {
 
 static unsigned ctb, cta;
 
-unsigned versionMajor = 1;
-unsigned versionMinor = 26;
+unsigned versionMajor = 2;
+unsigned versionMinor = 1;
+unsigned versionPatch = 1;
 #if defined(__CIRCLE__)
 #define CV "c"
 #else
@@ -379,8 +380,8 @@ void InitialiseLCD() {
     if ((height >= 64) &&
         (strcasecmp(options.GetLcdLogoName(), "1541ii") == 0)) {
       screenLCD->PlotRawImage(logo_ssd_1541ii, 0, 0, width, 64);
-      snprintf(tempBuffer, tempBufferSize, "Pi1541 V%d.%02d" CV, versionMajor,
-               versionMinor);
+      snprintf(tempBuffer, tempBufferSize, "Pi1541 V%d.%d.%d" CV, versionMajor,
+               versionMinor, versionPatch);
       screenLCD->PrintText(false, 16, 0, tempBuffer, 0xffffffff);
       logo_done = true;
     } else if ((height >= 64) &&
@@ -403,8 +404,8 @@ void InitialiseLCD() {
     }
 
     if (!logo_done) {
-      snprintf(tempBuffer, tempBufferSize, "Pi1541 V%d.%02d" CV, versionMajor,
-               versionMinor);
+      snprintf(tempBuffer, tempBufferSize, "Pi1541 V%d.%d.%d" CV, versionMajor,
+               versionMinor, versionPatch);
       int x = (width - 8 * strlen(tempBuffer)) / 2;
       int y = (height - 16) / 2;
       screenLCD->PrintText(false, x, y, tempBuffer, 0x0);
@@ -555,8 +556,8 @@ void UpdateScreen() {
         usb_mass_update = true;
       }
       snprintf(tempBuffer, tempBufferSize,
-               "pottendo-Pi1541 (%s) Pi1541 V%d.%02d", PPI1541VERSION,
-               versionMajor, versionMinor);
+               "pottendo-Pi1541 (%s) Pi1541 V%d.%d.%d", PPI1541VERSION,
+               versionMajor, versionMinor, versionPatch);
       screen->PrintText(false, 0, y + 40, tempBuffer, textColour, bgColour);
     }
 #endif
@@ -1751,8 +1752,8 @@ static void DisplayLogo() {
 
   screen->PlotImage((u32 *)image, 0, 0, w, h);
 
-  snprintf(tempBuffer, tempBufferSize, "V%d.%02d pottendo-Pi1541 (%s)",
-           versionMajor, versionMinor, PPI1541VERSION);
+  snprintf(tempBuffer, tempBufferSize, "V%d.%d.%d pottendo-Pi1541 (%s)",
+           versionMajor, versionMinor, versionPatch, PPI1541VERSION);
   screen->PrintText(false, 20, 180, tempBuffer,
                     FileBrowser::Colour(VIC2_COLOUR_INDEX_BLUE));
 #endif

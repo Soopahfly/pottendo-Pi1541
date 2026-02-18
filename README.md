@@ -1,4 +1,4 @@
-# pottendo-Pi1541 V2.1
+# pottendo-Pi1541 V2.1.1
 
 This is an optional port of Pi1541 (V1.25F) to the current Circle bare metal library (as of February 2026, Step 50.1).
 
@@ -34,6 +34,9 @@ A web-server has been added which features the WebUI:
 - Configure web-memory profile (see new options below)
 - Minor changes: remove debuglogs
 - Update circle-stdlib/circle to recent step 50.1
+- **V2.1.1**: Power supply warning — detects under-voltage via the VideoCore throttle
+  status register and displays a warning on HDMI (red banner) and LCD (`POWER WARNING!`)
+  at startup and during operation
 - Bugfixes: navigate dirs with spaces in names over several levels, proper filename for PRG when mounted
             3A+ kernel name for upload, create image supports .g64, ...
 
