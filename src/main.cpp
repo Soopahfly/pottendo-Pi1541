@@ -711,7 +711,9 @@ void UpdateScreen() {
         }
       }
 
+#if !defined(__CIRCLE__)
       CheckPowerSupply();
+#endif
 
       if (caddyIndexChangedTimer == 0) {
         if (refreshLCDStatusDisplay) {
